@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Form from './Form'
 import TodoList from './TodoList';
+import Todo from './Todo';
 
 const URL = 'http://localhost:9000/api/todos'
 
