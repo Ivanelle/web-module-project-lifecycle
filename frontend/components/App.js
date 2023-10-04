@@ -8,7 +8,8 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
-      todoInput: ''
+      todoInput: '',
+      showCompleted: true
     } 
     }
 
@@ -55,25 +56,38 @@ export default class App extends React.Component {
       this.setState({ ...this.state, error: err.response.data.message })
     })
   }
+
+  toggleToShowCompleted = () => {
+    this.setState({ ...this.state, showCompleted: !this.state.showCompleted })
+  }
+
   componentDidMount() {
     this.fetchTodos()
   }
+
   render() {
     return (
       <div>
         <div id='todos'>
           <h2>Todos:</h2>
           {
-            this.state.todos.map(td => {
-              return <div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' 👍' : ''}</div>
-            })
+            this.state.todos.reduce((acc, td) => {
+              if(this.state.showCompleted || !td.completed) return acc.concat(
+                <div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' 👍' : ''}</div>
+              )
+              return acc
+            }, [])
+              
+              // (td => {
+              // return 
+            // })
           }
         </div>
         <form id='todoForm' onSubmit={this.todoFormSubmit}>
           <input value={this.state.todoInput} onChange={this.onTodoChange}type='text' placeholder='What else to do?' />
           <input type='submit'></input>
-          <button>Clear Completed</button>
         </form>
+        <button onClick={this.toggleToShowCompleted}>{this.state.showCompleted ? 'Hide' : 'Show'} Completed</button>
       </div>
     )
   }
